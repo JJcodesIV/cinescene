@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineTech - Behind the Scenes</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #f8f9fa;
+            --border-radius: 5px;
+            --box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f8f9fa;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--accent-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            margin: 1rem 0;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-bar button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://source.unsplash.com/random/1600x900/?filmmaking') no-repeat center center/cover;
+            height: 60vh;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--text-light);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--text-light);
+            color: var(--primary-color);
+        }
+
+        /* Featured Scenes */
+        .featured-scenes {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            margin: 10px auto;
+        }
+
+        .scenes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .scene-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .scene-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .scene-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .scene-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .scene-card:hover .scene-img img {
+            transform: scale(1.1);
+        }
+
+        .scene-info {
+            padding: 1rem;
+        }
+
+        .scene-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .scene-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .scene-description {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .scene-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .tag {
+            background-color: var(--light-color);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Categories */
+        .categories {
+            padding: 3rem 0;
+            background-color: var(--light-color);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background-color: white;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Plans */
+        .plans {
+            padding: 3rem 0;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .plan-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .plan-header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 1.5rem;
+        }
+
+        .plan-price {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+
+        .plan-details {
+            padding: 1.5rem;
+        }
+
+        .plan-features {
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .plan-features li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .plan-features li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        /* Scene Detail Page */
+        .scene-detail {
+            padding: 2rem 0;
+        }
+
+        .scene-detail-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .scene-video {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+        }
+
+        .scene-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .scene-detail-info {
+            margin-top: 1.5rem;
+        }
+
+        .scene-detail-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .scene-detail-meta span {
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .scene-detail-meta i {
+            margin-right: 5px;
+        }
+
+        .technical-details {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .technical-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .technical-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .technical-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .technical-item h4 i {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-item.active {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .comment {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-user {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+
+        .comment-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Forum */
+        .forum {
+            padding: 2rem 0;
+        }
+
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .forum-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .forum-category {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .forum-category-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .forum-category-meta {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .forum-topics {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .forum-topics-header {
+            background-color: var(--light-color);
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr;
+            font-weight: bold;
+        }
+
+        .forum-topic {
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr;
+            border-bottom: 1px solid #eee;
+        }
+
+        .forum-topic:last-child {
+            border-bottom: none;
+        }
+
+        .forum-topic-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .forum-topic-title i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background-color: var(--secondary-color);
+            margin: 5px 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transform: translateY(-50px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .auth-tab.active {
+            border-bottom-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary-color);
+                flex-direction: column;
+                padding: 1rem 0;
+                z-index: 100;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0;
+                text-align: center;
+                padding: 0.5rem 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .scene-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .forum-topics-header, .forum-topic {
+                grid-template-columns: 2fr 1fr;
+            }
+
+            .topic-lastpost {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .forum-topics-header, .forum-topic {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .topic-replies {
+                display: none;
+            }
+
+            .hero {
+                height: 70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+        // Sample data
+        const scenesData = [
+            {
+                id: 1,
+                title: "The Matrix - Bullet Time Scene",
+                image: "https://source.unsplash.com/random/600x400/?matrix",
+                film: "The Matrix",
+                year: 1999,
+                director: "The Wachowskis",
+                description: "The revolutionary 'bullet time' effect that became the film's visual signature.",
+                tags: ["action", "sci-fi", "special effects"],
+                technical: {
+                    camera: "Multiple still cameras arranged in a circle",
+                    lenses: "Various fixed focal length lenses",
+                    lighting: "Controlled studio lighting with green screen",
+                    equipment: "Custom rig with 120 still cameras and 2 film cameras"
+                },
+                behindTheScenes: "The effect was achieved by placing over 120 still cameras in a circle around the action. Each camera captured a single frame, and when played in sequence, they created the illusion of a camera moving around a scene frozen in time.",
+                comments: [
+                    {
+                        user: "FilmBuff42",
+                        avatar: "https://source.unsplash.com/random/100x100/?person1",
+                        date: "2 days ago",
+                        text: "This scene revolutionized visual effects in cinema. I remember watching it for the first time and being completely blown away!"
+                    },
+                    {
+                        user: "CameraGuru",
+                        avatar: "https://source.unsplash.com/random/100x100/?person2",
+                        date: "1 week ago",
+                        text: "The technical achievement here is incredible. What's amazing is that they did this in 1999, well before the era of advanced digital effects we have today."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Inception - Paris Folding Scene",
+                image: "https://source.unsplash.com/random/600x400/?city",
+                film: "Inception",
+                year: 2010,
+                director: "Christopher Nolan",
+                description: "The famous scene where Paris folds onto itself, demonstrating the dream manipulation concept.",
+                tags: ["sci-fi", "visual effects", "practical effects"],
+                technical: {
+                    camera: "VistaVision cameras with 35mm film",
+                    lenses: "Panavision Primo lenses",
+                    lighting: "Natural daylight with supplemental lighting",
+                    equipment: "Combination of practical sets and CGI enhancements"
+                },
+                behindTheScenes: "Christopher Nolan wanted to use as many practical effects as possible. For this scene, they built massive rotating sets and used miniature models for the city folding, supplemented with CGI to complete the effect. The actors were performing on these real moving sets.",
+                comments: [
+                    {
+                        user: "NolanFan",
+                        avatar: "https://source.unsplash.com/random/100x100/?person3",
+                        date: "3 days ago",
+                        text: "Nolan's commitment to practical effects over CGI whenever possible really makes his films stand out. The authenticity comes through on screen."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Mad Max: Fury Road - The Storm Sequence",
+                image: "https://source.unsplash.com/random/600x400/?desert",
+                film: "Mad Max: Fury Road",
+                year: 2015,
+                director: "George Miller",
+                description: "The intense storm sequence where the war rig drives through a massive sandstorm.",
+                tags: ["action", "practical effects", "stunts"],
+                technical: {
+                    camera: "ARRI Alexa Plus and Canon EOS 5D Mark II",
+                    lenses: "Various Panavision lenses",
+                    lighting: "Natural desert lighting with atmospheric effect enhancements",
+                    equipment: "Custom vehicle rigs, practical stunt vehicles, partial CGI for the storm"
+                },
+                behindTheScenes: "While the sandstorm itself was created with CGI, most of the stunts and vehicle sequences were shot practically in the Namibian desert. The film used minimal green screen and relied on real stunt performers for the action sequences.",
+                comments: [
+                    {
+                        user: "ActionMovieLover",
+                        avatar: "https://source.unsplash.com/random/100x100/?person4",
+                        date: "1 month ago",
+                        text: "The way Miller combines practical stunts with CGI enhancements is masterful. You can feel the authenticity of the action."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Gravity - Opening Long Take",
+                image: "https://source.unsplash.com/random/600x400/?space",
+                film: "Gravity",
+                year: 2013,
+                director: "Alfonso Cuarón",
+                description: "The breathtaking 13-minute opening scene that appears as a single, unbroken shot.",
+                tags: ["sci-fi", "long take", "CGI"],
+                technical: {
+                    camera: "ARRI Alexa cameras with 3D rigs",
+                    lenses: "Custom designed lenses for the shoot",
+                    lighting: "Complex LED light box system",
+                    equipment: "Robotic camera system, LED screens, wire rigs for actors"
+                },
+                behindTheScenes: "The filmmakers built a 'Light Box,' a 9-foot cube lined with 196 panels of LEDs to simulate the light conditions of space. The actors were suspended on wire rigs while robotic cameras moved around them, creating the illusion of weightlessness.",
+                comments: [
+                    {
+                        user: "VFXArtist",
+                        avatar: "https://source.unsplash.com/random/100x100/?person5",
+                        date: "2 weeks ago",
+                        text: "The innovation of the 'Light Box' was revolutionary for creating realistic lighting in space scenes."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Lord of the Rings - Massive Battle Scenes",
+                image: "https://source.unsplash.com/random/600x400/?battle",
+                film: "The Lord of the Rings Trilogy",
+                year: "2001-2003",
+                director: "Peter Jackson",
+                description: "The epic large-scale battle sequences featuring thousands of characters.",
+                tags: ["fantasy", "CGI", "battle scenes"],
+                technical: {
+                    camera: "Multiple Arriflex 435 and VistaVision cameras",
+                    lenses: "Various Zeiss and Panavision lenses",
+                    lighting: "Natural lighting for exteriors, elaborate lighting setups for interiors",
+                    equipment: "Motion capture technology, MASSIVE software for CGI crowds"
+                },
+                behindTheScenes: "Weta Digital developed custom software called 'MASSIVE' (Multiple Agent Simulation System in Virtual Environment) to create realistic AI-driven battles with thousands of individual 'agents' that could make their own decisions in combat.",
+                comments: [
+                    {
+                        user: "MiddleEarthFan",
+                        avatar: "https://source.unsplash.com/random/100x100/?person6",
+                        date: "3 months ago",
+                        text: "The fact that they created custom software just for these battle scenes shows the level of commitment to making something truly special."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Blade Runner 2049 - Las Vegas Scene",
+                image: "https://source.unsplash.com/random/600x400/?city-night",
+                film: "Blade Runner 2049",
+                year: 2017,
+                director: "Denis Villeneuve",
+                description: "The visually striking Las Vegas scene bathed in orange dust and light.",
+                tags: ["sci-fi", "cinematography", "lighting"],
+                technical: {
+                    camera: "ARRI Alexa XT",
+                    lenses: "Zeiss Master Prime lenses",
+                    lighting: "Complex practical lighting supplemented with post-production",
+                    equipment: "Practical sets combined with miniatures and digital extensions"
+                },
+                behindTheScenes: "Cinematographer Roger Deakins created the orange-hued Las Vegas scenes using miniatures and practical lighting effects rather than CGI. The team built detailed miniature models of the ruined Las Vegas cityscape and used smoke and lighting to create the dusty atmosphere.",
+                comments: [
+                    {
+                        user: "CinematographyLover",
+                        avatar: "https://source.unsplash.com/random/100x100/?person7",
+                        date: "1 year ago",
+                        text: "Roger Deakins finally won his well-deserved Oscar for this film. The lighting in this scene is absolute perfection."
+                    }
+                ]
+            }
+        ];
+
+        const forumTopics = [
+            {
+                id: 1,
+                title: "How to achieve the 'Blade Runner 2049' lighting look?",
+                author: "NeonNoir",
+                replies: 23,
+                lastPosted: "2 hours ago",
+                category: "Cinematography"
+            },
+            {
+                id: 2,
+                title: "Budget alternatives to professional camera sliders",
+                author: "IndieFilmmaker",
+                replies: 42,
+                lastPosted: "1 day ago",
+                category: "Equipment"
+            },
+            {
+                id: 3,
+                title: "Analyzing the editing techniques in 'Whiplash'",
+                author: "RhythmicCuts",
+                replies: 18,
+                lastPosted: "3 days ago",
+                category: "Editing"
+            },
+            {
+                id: 4,
+                title: "Best practices for recording dialogue in windy locations",
+                author: "SoundGuy123",
+                replies: 31,
+                lastPosted: "5 days ago",
+                category: "Sound Design"
+            },
+            {
+                id: 5,
+                title: "How does Christopher Nolan achieve his practical effects?",
+                author: "NolanFanatic",
+                replies: 56,
+                lastPosted: "1 week ago",
+                category: "Special Effects"
+            }
+        ];
+
+        // Main App Component
+        function App() {
+            const [activePage, setActivePage] = React.useState('home');
+            const [activeScene, setActiveScene] = React.useState(null);
+            const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+            const [showMobileMenu, setShowMobileMenu] = React.useState(false);
+            const [activeAuthTab, setActiveAuthTab] = React.useState('login');
+            const [activeDetailTab, setActiveDetailTab] = React.useState('technical');
+            const [showLoginModal, setShowLoginModal] = React.useState(false);
+            const [searchQuery, setSearchQuery] = React.useState('');
+
+            const toggleMobileMenu = () => {
+                setShowMobileMenu(!showMobileMenu);
+            };
+
+            const handleSceneClick = (sceneId) => {
+                const scene = scenesData.find(scene => scene.id === sceneId);
+                setActiveScene(scene);
+                setActivePage('sceneDetail');
+            };
+
+            const handleSearch = (e) => {
+                e.preventDefault();
+                // In a real app, this would filter results based on the search query
+                console.log("Searching for:", searchQuery);
+                setActivePage('scenes');
+            };
+
+            const renderPage = () => {
+                switch(activePage) {
+                    case 'home':
+                        return <HomePage handleSceneClick={handleSceneClick} />;
+                    case 'sceneDetail':
+                        return <SceneDetailPage scene={activeScene} activeTab={activeDetailTab} setActiveTab={setActiveDetailTab} />;
+                    case 'scenes':
+                        return <ScenesPage handleSceneClick={handleSceneClick} />;
+                    case 'forum':
+                        return <ForumPage />;
+                    case 'pricing':
+                        return <PricingPage />;
+                    default:
+                        return <HomePage handleSceneClick={handleSceneClick} />;
+                }
+            };
+
+            return (
+                <>
+                    <header className="header">
+                        <div className="container header-container">
+                            <div className="logo" onClick={() => setActivePage('home')}>
+                                <i className="fas fa-film"></i>
+                                <span>CineTech</span>
+                            </div>
+                            <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+                                <i className={showMobileMenu ? "fas fa-times" : "fas fa-bars"}></i>
+                            </button>
+                            <ul className={`nav-links ${showMobileMenu ? 'active' : ''}`}>
+                                <li><a href="#" onClick={() => setActivePage('home')}>Home</a></li>
+                                <li><a href="#" onClick={() => setActivePage('scenes')}>Scenes</a></li>
+                                <li><a href="#" onClick={() => setActivePage('forum')}>Forum</a></li>
+                                <li><a href="#" onClick={() => setActivePage('pricing')}>Pricing</a></li>
+                                {isLoggedIn ? (
+                                    <li><a href="#" onClick={() => setIsLoggedIn(false)}>Logout</a></li>
+                                ) : (
+                                    <li><a href="#" onClick={() => setShowLoginModal(true)}>Login</a></li>
+                                )}
+                            </ul>
+                        </div>
+                    </header>
+
+                    <div className="container">
+                        <form className="search-bar" onSubmit={handleSearch}>
+                            <input 
+                                type="text" 
+                                placeholder="Search for scenes, techniques, or equipment..." 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <button type="submit"><i className="fas fa-search"></i></button>
+                        </form>
+                    </div>
+
+                    {renderPage()}
+
+                    <footer className="footer">
+                        <div className="container">
+                            <div className="footer-grid">
+                                <div className="footer-column">
+                                    <h3>CineTech</h3>
+                                    <p>Your ultimate resource for behind-the-scenes filmmaking techniques and information.</p>
+                                    <div className="social-links">
+                                        <a href="#"><i className="fab fa-facebook-f"></i></a>
+                                        <a href="#"><i className="fab fa-twitter"></i></a>
+                                        <a href="#"><i className="fab fa-instagram"></i></a>
+                                        <a href="#"><i className="fab fa-youtube"></i></a>
+                                    </div>
+                                </div>
+                                <div className="footer-column">
+                                    <h3>Explore</h3>
+                                    <ul className="footer-links">
+                                        <li><a href="#" onClick={() => setActivePage('home')}>Home</a></li>
+                                        <li><a href="#" onClick={() => setActivePage('scenes')}>Scenes Database</a></li>
+                                        <li><a href="#" onClick={() => setActivePage('forum')}>Community Forum</a></li>
+                                        <li><a href="#" onClick={() => setActivePage('pricing')}>Subscription Plans</a></li>
+                                    </ul>
+                                </div>
+                                <div className="footer-column">
+                                    <h3>Categories</h3>
+                                    <ul className="footer-links">
+                                        <li><a href="#">Cinematography</a></li>
+                                        <li><a href="#">Lighting Techniques</a></li>
+                                        <li><a href="#">Special Effects</a></li>
+                                        <li><a href="#">Sound Design</a></li>
+                                        <li><a href="#">Editing</a></li>
+                                    </ul>
+                                </div>
+                                <div className="footer-column">
+                                    <h3>Support</h3>
+                                    <ul className="footer-links">
+                                        <li><a href="#">About Us</a></li>
+                                        <li><a href="#">Contact</a></li>
+                                        <li><a href="#">FAQ</a></li>
+                                        <li><a href="#">Privacy Policy</a></li>
+                                        <li><a href="#">Terms of Service</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="copyright">
+                                <p>&copy; 2025 CineTech. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </footer>
+
+                    {/* Login Modal */}
+                    <div className={`modal-overlay ${showLoginModal ? 'active' : ''}`}>
+                        <div className="modal">
+                            <div className="modal-header">
+                                <h3>Login to CineTech</h3>
+                                <button className="modal-close" onClick={() => setShowLoginModal(false)}>
+                                    <i className="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="auth-tabs">
+                                    <div 
+                                        className={`auth-tab ${activeAuthTab === 'login' ? 'active' : ''}`}
+                                        onClick={() => setActiveAuthTab('login')}
+                                    >
+                                        Login
+                                    </div>
+                                    <div 
+                                        className={`auth-tab ${activeAuthTab === 'register' ? 'active' : ''}`}
+                                        onClick={() => setActiveAuthTab('register')}
+                                    >
+                                        Register
+                                    </div>
+                                </div>
+                                
+                                <div className={`auth-form ${activeAuthTab === 'login' ? 'active' : ''}`}>
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email</label>
+                                        <input type="email" id="email" className="form-control" placeholder="Enter your email" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Password</label>
+                                        <input type="password" id="password" className="form-control" placeholder="Enter your password" />
+                                    </div>
+                                    <button 
+                                        className="btn btn-block" 
+                                        onClick={() => {
+                                            setIsLoggedIn(true);
+                                            setShowLoginModal(false);
+                                        }}
+                                    >
+                                        Login
+                                    </button>
+                                    <div className="auth-footer">
+                                        <p>Forgot your password? <a href="#">Reset it here</a></p>
+                                    </div>
+                                </div>
+                                
+                                <div className={`auth-form ${activeAuthTab === 'register' ? 'active' : ''}`}>
+                                    <div className="form-group">
+                                        <label htmlFor="reg-name">Full Name</label>
+                                        <input type="text" id="reg-name" className="form-control" placeholder="Enter your full name" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="reg-email">Email</label>
+                                        <input type="email" id="reg-email" className="form-control" placeholder="Enter your email" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="reg-password">Password</label>
+                                        <input type="password" id="reg-password" className="form-control" placeholder="Create a password" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="reg-confirm">Confirm Password</label>
+                                        <input type="password" id="reg-confirm" className="form-control" placeholder="Confirm your password" />
+                                    </div>
+                                    <button 
+                                        className="btn btn-block" 
+                                        onClick={() => {
+                                            setIsLoggedIn(true);
+                                            setShowLoginModal(false);
+                                        }}
+                                    >
+                                        Register
+                                    </button>
+                                    <div className="auth-footer">
+                                        <p>By registering, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
+        // Home Page Component
+        function HomePage({ handleSceneClick }) {
+            return (
+                <>
+                    <section className="hero">
+                        <div className="hero-content">
+                            <h1>Discover the Secrets Behind the Scenes</h1>
+                            <p>Explore how your favorite movie scenes were shot with detailed technical information and behind-the-scenes insights.</p>
+                            <div>
+                                <button className="btn">Get Started</button>
+                                <button className="btn btn-outline" style={{marginLeft: '10px'}}>Learn More</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="featured-scenes">
+                        <div className="container">
+                            <h2 className="section-title">Featured Scenes</h2>
+                            <div className="scenes-grid">
+                                {scenesData.slice(0, 3).map(scene => (
+                                    <div className="scene-card" key={scene.id} onClick={() => handleSceneClick(scene.id)}>
+                                        <div className="scene-img">
+                                            <img src={scene.image} alt={scene.title} />
+                                        </div>
+                                        <div className="scene-info">
+                                            <h3>{scene.title}</h3>
+                                            <div className="scene-meta">
+                                                <span>{scene.film} ({scene.year})</span>
+                                                <span>Dir: {scene.director}</span>
+                                            </div>
+                                            <p className="scene-description">{scene.description}</p>
+                                            <div className="scene-tags">
+                                                {scene.tags.map((tag, index) => (
+                                                    <span className="tag" key={index}>#{tag}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{textAlign: 'center', marginTop: '2rem'}}>
+                                <button className="btn" onClick={() => handleSceneClick(1)}>View All Scenes</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="categories">
+                        <div className="container">
+                            <h2 className="section-title">Explore Categories</h2>
+                            <div className="category-grid">
+                                <div className="category-card">
+                                    <div className="category-icon">
+                                        <i className="fas fa-camera"></i>
+                                    </div>
+                                    <h3>Cinematography</h3>
+                                    <p>Explore camera techniques, movements, and framing choices.</p>
+                                </div>
+                                <div className="category-card">
+                                    <div className="category-icon">
+                                        <i className="fas fa-lightbulb"></i>
+                                    </div>
+                                    <h3>Lighting</h3>
+                                    <p>Learn about lighting setups, equipment, and mood creation.</p>
+                                </div>
+                                <div className="category-card">
+                                    <div className="category-icon">
+                                        <i className="fas fa-magic"></i>
+                                    </div>
+                                    <h3>Special Effects</h3>
+                                    <p>Discover practical and visual effects techniques.</p>
+                                </div>
+                                <div className="category-card">
+                                    <div className="category-icon">
+                                        <i className="fas fa-volume-up"></i>
+                                    </div>
+                                    <h3>Sound Design</h3>
+                                    <p>Understand audio recording, sound effects, and mixing.</p>
+                                </div>
+                                <div className="category-card">
+                                    <div className="category-icon">
+                                        <i className="fas fa-cut"></i>
+                                    </div>
+                                    <h3>Editing</h3>
+                                    <p>Study editing techniques, pacing, and storytelling.</p>
+                                </div>
+                                <div className="category-card">
+                                    <div className="category-icon">
+                                        <i className="fas fa-user-friends"></i>
+                                    </div>
+                                    <h3>Direction</h3>
+                                    <p>Learn about directorial choices and actor management.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="plans">
+                        <div className="container">
+                            <h2 className="section-title">Subscription Plans</h2>
+                            <div className="plans-grid">
+                                <div className="plan-card">
+                                    <div className="plan-header">
+                                        <h3>Basic</h3>
+                                        <div className="plan-price">$5.99<span>/month</span></div>
+                                    </div>
+                                    <div className="plan-details">
+                                        <ul className="plan-features">
+                                            <li>Access to basic scene database</li>
+                                            <li>Limited technical information</li>
+                                            <li>Community forum access</li>
+                                            <li>Ad-supported experience</li>
+                                        </ul>
+                                        <button className="btn btn-block">Get Started</button>
+                                    </div>
+                                </div>
+                                <div className="plan-card">
+                                    <div className="plan-header">
+                                        <h3>Premium</h3>
+                                        <div className="plan-price">$12.99<span>/month</span></div>
+                                    </div>
+                                    <div className="plan-details">
+                                        <ul className="plan-features">
+                                            <li>Full access to all scenes</li>
+                                            <li>Complete technical breakdowns</li>
+                                            <li>Behind-the-scenes videos</li>
+                                            <li>Ad-free experience</li>
+                                            <li>Download resources</li>
+                                        </ul>
+                                        <button className="btn btn-block">Get Started</button>
+                                    </div>
+                                </div>
+                                <div className="plan-card">
+                                    <div className="plan-header">
+                                        <h3>Pro</h3>
+                                        <div className="plan-price">$24.99<span>/month</span></div>
+                                    </div>
+                                    <div className="plan-details">
+                                        <ul className="plan-features">
+                                            <li>Everything in Premium</li>
+                                            <li>Exclusive interviews</li>
+                                            <li>Early access to new content</li>
+                                            <li>Virtual workshops</li>
+                                            <li>Filmmaking resources library</li>
+                                        </ul>
+                                        <button className="btn btn-block">Get Started</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            );
+        }
+
+        // Scene Detail Page Component
+        function SceneDetailPage({ scene, activeTab, setActiveTab }) {
+            if (!scene) return <div>Loading...</div>;
+
+            return (
+                <section className="scene-detail">
+                    <div className="container">
+                        <h1>{scene.title}</h1>
+                        <div className="scene-detail-grid">
+                            <div>
+                                <div className="scene-video">
+                                    <iframe 
+                                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                                        title="Scene Video" 
+                                        frameBorder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowFullScreen>
+                                    </iframe>
+                                </div>
+                                <div className="scene-detail-info">
+                                    <div className="scene-detail-meta">
+                                        <span><i className="fas fa-film"></i> {scene.film} ({scene.year})</span>
+                                        <span><i className="fas fa-user"></i> {scene.director}</span>
+                                    </div>
+                                    <p>{scene.description}</p>
+                                    <div className="scene-tags" style={{marginTop: '1rem'}}>
+                                        {scene.tags.map((tag, index) => (
+                                            <span className="tag" key={index}>#{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                <div className="bts-content">
+                                    <div className="tabs">
+                                        <div 
+                                            className={`tab-item ${activeTab === 'technical' ? 'active' : ''}`}
+                                            onClick={() => setActiveTab('technical')}
+                                        >
+                                            Technical Details
+                                        </div>
+                                        <div 
+                                            className={`tab-item ${activeTab === 'bts' ? 'active' : ''}`}
+                                            onClick={() => setActiveTab('bts')}
+                                        >
+                                            Behind The Scenes
+                                        </div>
+                                        <div 
+                                            className={`tab-item ${activeTab === 'discussion' ? 'active' : ''}`}
+                                            onClick={() => setActiveTab('discussion')}
+                                        >
+                                            Discussion
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={`tab-content ${activeTab === 'technical' ? 'active' : ''}`}>
+                                        <div className="technical-item">
+                                            <h4><i className="fas fa-camera"></i> Camera</h4>
+                                            <p>{scene.technical.camera}</p>
+                                        </div>
+                                        <div className="technical-item">
+                                            <h4><i className="fas fa-eye"></i> Lenses</h4>
+                                            <p>{scene.technical.lenses}</p>
+                                        </div>
+                                        <div className="technical-item">
+                                            <h4><i className="fas fa-lightbulb"></i> Lighting</h4>
+                                            <p>{scene.technical.lighting}</p>
+                                        </div>
+                                        <div className="technical-item">
+                                            <h4><i className="fas fa-cogs"></i> Equipment</h4>
+                                            <p>{scene.technical.equipment}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={`tab-content ${activeTab === 'bts' ? 'active' : ''}`}>
+                                        <p>{scene.behindTheScenes}</p>
+                                        <div style={{marginTop: '1.5rem'}}>
+                                            <h4>Behind The Scenes Gallery</h4>
+                                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginTop: '1rem'}}>
+                                                <img src="https://source.unsplash.com/random/300x200/?filmmaking1" alt="Behind the scenes" />
+                                                <img src="https://source.unsplash.com/random/300x200/?filmmaking2" alt="Behind the scenes" />
+                                                <img src="https://source.unsplash.com/random/300x200/?filmmaking3" alt="Behind the scenes" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={`tab-content ${activeTab === 'discussion' ? 'active' : ''}`}>
+                                        <div className="comments">
+                                            {scene.comments.map((comment, index) => (
+                                                <div className="comment" key={index}>
+                                                    <div className="comment-header">
+                                                        <div className="comment-user">
+                                                            <img src={comment.avatar} alt={comment.user} />
+                                                        </div>
+                                                        <div className="comment-info">
+                                                            <h4>{comment.user}</h4>
+                                                            <div className="comment-meta">{comment.date}</div>
+                                                        </div>
+                                                    </div>
+                                                    <p>{comment.text}</p>
+                                                </div>
+                                            ))}
+                                            
+                                            <div style={{marginTop: '1.5rem'}}>
+                                                <h4>Add Your Comment</h4>
+                                                <textarea 
+                                                    className="form-control" 
+                                                    rows="4" 
+                                                    placeholder="Share your thoughts on this scene..."
+                                                    style={{marginTop: '1rem', width: '100%'}}
+                                                ></textarea>
+                                                <button className="btn" style={{marginTop: '1rem'}}>Post Comment</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div className="technical-details">
+                                    <h3>Similar Scenes</h3>
+                                    <div style={{marginTop: '1rem'}}>
+                                        {scenesData
+                                            .filter(s => s.id !== scene.id)
+                                            .slice(0, 3)
+                                            .map(s => (
+                                                <div key={s.id} style={{marginBottom: '1rem', display: 'flex', alignItems: 'center'}}>
+                                                    <img 
+                                                        src={s.image} 
+                                                        alt={s.title} 
+                                                        style={{width: '80px', height: '50px', objectFit: 'cover', borderRadius: 'var(--border-radius)', marginRight: '10px'}} 
+                                                    />
+                                                    <div>
+                                                        <h4 style={{fontSize: '0.9rem'}}>{s.title}</h4>
+                                                        <p style={{fontSize: '0.8rem', color: '#666'}}>{s.film} ({s.year})</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                                
+                                <div className="technical-details" style={{marginTop: '1.5rem'}}>
+                                    <h3>Related Equipment</h3>
+                                    <ul style={{marginTop: '1rem'}}>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Canon EOS C300 Mark III</a>
+                                        </li>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Arri SkyPanel S60-C</a>
+                                        </li>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">DJI Ronin 2 Gimbal</a>
+                                        </li>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Zeiss Supreme Prime Lenses</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">View All Related Equipment →</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div className="technical-details" style={{marginTop: '1.5rem'}}>
+                                    <h3>Filmmaking Techniques</h3>
+                                    <ul style={{marginTop: '1rem'}}>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Understanding Depth of Field</a>
+                                        </li>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Three-Point Lighting Setup</a>
+                                        </li>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Camera Movement Techniques</a>
+                                        </li>
+                                        <li style={{marginBottom: '0.8rem'}}>
+                                            <a href="#">Blocking and Staging Actors</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">View All Techniques →</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Scenes Page Component
+        function ScenesPage({ handleSceneClick }) {
+            return (
+                <section className="featured-scenes">
+                    <div className="container">
+                        <h1 className="section-title">Scene Database</h1>
+                        
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '10px'}}>
+                            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                                <select className="form-control">
+                                    <option>All Genres</option>
+                                    <option>Action</option>
+                                    <option>Science Fiction</option>
+                                    <option>Drama</option>
+                                    <option>Comedy</option>
+                                    <option>Horror</option>
+                                </select>
+                                
+                                <select className="form-control">
+                                    <option>All Techniques</option>
+                                    <option>Special Effects</option>
+                                    <option>Practical Effects</option>
+                                    <option>Cinematography</option>
+                                    <option>Lighting</option>
+                                </select>
+                                
+                                <select className="form-control">
+                                    <option>All Years</option>
+                                    <option>2020s</option>
+                                    <option>2010s</option>
+                                    <option>2000s</option>
+                                    <option>1990s</option>
+                                    <option>Earlier</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <select className="form-control">
+                                    <option>Sort: Newest First</option>
+                                    <option>Sort: Oldest First</option>
+                                    <option>Sort: Most Popular</option>
+                                    <option>Sort: A-Z</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div className="scenes-grid">
+                            {scenesData.map(scene => (
+                                <div className="scene-card" key={scene.id} onClick={() => handleSceneClick(scene.id)}>
+                                    <div className="scene-img">
+                                        <img src={scene.image} alt={scene.title} />
+                                    </div>
+                                    <div className="scene-info">
+                                        <h3>{scene.title}</h3>
+                                        <div className="scene-meta">
+                                            <span>{scene.film} ({scene.year})</span>
+                                            <span>Dir: {scene.director}</span>
+                                        </div>
+                                        <p className="scene-description">{scene.description}</p>
+                                        <div className="scene-tags">
+                                            {scene.tags.map((tag, index) => (
+                                                <span className="tag" key={index}>#{tag}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div style={{textAlign: 'center', marginTop: '2rem'}}>
+                            <button className="btn">Load More</button>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Forum Page Component
+        function ForumPage() {
+            return (
+                <section className="forum">
+                    <div className="container">
+                        <div className="forum-header">
+                            <h1>Community Forum</h1>
+                            <button className="btn">+ New Topic</button>
+                        </div>
+                        
+                        <div className="forum-categories">
+                            <div className="forum-category">
+                                <div className="forum-category-icon">
+                                    <i className="fas fa-camera"></i>
+                                </div>
+                                <div className="forum-category-info">
+                                    <h3>Cinematography</h3>
+                                    <p>Discuss camera techniques, movements, and equipment.</p>
+                                    <div className="forum-category-meta">
+                                        <span>124 Topics</span> • <span>1.2k Posts</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="forum-category">
+                                <div className="forum-category-icon">
+                                    <i className="fas fa-lightbulb"></i>
+                                </div>
+                                <div className="forum-category-info">
+                                    <h3>Lighting</h3>
+                                    <p>Share lighting setups, techniques, and equipment recommendations.</p>
+                                    <div className="forum-category-meta">
+                                        <span>89 Topics</span> • <span>756 Posts</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="forum-category">
+                                <div className="forum-category-icon">
+                                    <i className="fas fa-magic"></i>
+                                </div>
+                                <div className="forum-category-info">
+                                    <h3>Special Effects</h3>
+                                    <p>Explore practical and visual effects techniques.</p>
+                                    <div className="forum-category-meta">
+                                        <span>103 Topics</span> • <span>932 Posts</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="forum-category">
+                                <div className="forum-category-icon">
+                                    <i className="fas fa-volume-up"></i>
+                                </div>
+                                <div className="forum-category-info">
+                                    <h3>Sound Design</h3>
+                                    <p>Discuss audio recording, effects, and mixing techniques.</p>
+                                    <div className="forum-category-meta">
+                                        <span>67 Topics</span> • <span>512 Posts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h2 style={{margin: '2rem 0 1rem'}}>Recent Discussions</h2>
+                        
+                        <div className="forum-topics">
+                            <div className="forum-topics-header">
+                                <div>Topic</div>
+                                <div>Replies</div>
+                                <div>Last Post</div>
+                            </div>
+                            
+                            {forumTopics.map(topic => (
+                                <div className="forum-topic" key={topic.id}>
+                                    <div className="forum-topic-title">
+                                        <i className="fas fa-comments"></i>
+                                        <div>
+                                            <h3>{topic.title}</h3>
+                                            <small>Started by {topic.author} in {topic.category}</small>
+                                        </div>
+                                    </div>
+                                    <div className="topic-replies">{topic.replies}</div>
+                                    <div className="topic-lastpost">{topic.lastPosted}</div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div style={{textAlign: 'center', marginTop: '2rem'}}>
+                            <button className="btn">View All Discussions</button>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Pricing Page Component
+        function PricingPage() {
+            return (
+                <section className="plans" style={{paddingTop: '2rem'}}>
+                    <div className="container">
+                        <h1 className="section-title">Choose Your Subscription Plan</h1>
+                        <p style={{textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem', color: '#666'}}>
+                            Unlock the full potential of CineTech with our premium subscription plans. Get access to exclusive content, detailed technical breakdowns, and behind-the-scenes insights.
+                        </p>
+                        
+                        <div className="plans-grid">
+                            <div className="plan-card">
+                                <div className="plan-header">
+                                    <h3>Basic</h3>
+                                    <div className="plan-price">$5.99<span>/month</span></div>
+                                </div>
+                                <div className="plan-details">
+                                    <ul className="plan-features">
+                                        <li>Access to basic scene database</li>
+                                        <li>Limited technical information</li>
+                                        <li>Community forum access</li>
+                                        <li>Ad-supported experience</li>
+                                    </ul>
+                                    <button className="btn btn-block">Get Started</button>
+                                </div>
+                            </div>
+                            <div className="plan-card" style={{transform: 'scale(1.05)', boxShadow: '0 5px 20px rgba(0,0,0,0.15)'}}>
+                                <div className="plan-header" style={{position: 'relative'}}>
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '-15px',
+                                        right: '-15px',
+                                        backgroundColor: 'var(--secondary-color)',
+                                        color: 'white',
+                                        padding: '5px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 'bold'
+                                    }}>
+                                        Most Popular
+                                    </span>
+                                    <h3>Premium</h3>
+                                    <div className="plan-price">$12.99<span>/month</span></div>
+                                </div>
+                                <div className="plan-details">
+                                    <ul className="plan-features">
+                                        <li>Full access to all scenes</li>
+                                        <li>Complete technical breakdowns</li>
+                                        <li>Behind-the-scenes videos</li>
+                                        <li>Ad-free experience</li>
+                                        <li>Download resources</li>
+                                    </ul>
+                                    <button className="btn btn-block">Get Started</button>
+                                </div>
+                            </div>
+                            <div className="plan-card">
+                                <div className="plan-header">
+                                    <h3>Pro</h3>
+                                    <div className="plan-price">$24.99<span>/month</span></div>
+                                </div>
+                                <div className="plan-details">
+                                    <ul className="plan-features">
+                                        <li>Everything in Premium</li>
+                                        <li>Exclusive interviews</li>
+                                        <li>Early access to new content</li>
+                                        <li>Virtual workshops</li>
+                                        <li>Filmmaking resources library</li>
+                                    </ul>
+                                    <button className="btn btn-block">Get Started</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style={{marginTop: '3rem', backgroundColor: 'white', padding: '2rem', borderRadius: 'var(--border-radius)', boxShadow: 'var(--box-shadow)'}}>
+                            <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Frequently Asked Questions</h2>
+                            
+                            <div style={{maxWidth: '800px', margin: '0 auto'}}>
+                                <div style={{marginBottom: '1.5rem'}}>
+                                    <h3>What does the subscription include?</h3>
+                                    <p>Our subscription plans give you access to our database of film scenes with detailed technical breakdowns, behind-the-scenes content, and filmmaking resources. The level of access depends on your chosen plan.</p>
+                                </div>
+                                
+                                <div style={{marginBottom: '1.5rem'}}>
+                                    <h3>Can I cancel my subscription anytime?</h3>
+                                    <p>Yes, you can cancel your subscription at any time. Your access will continue until the end of your current billing period.</p>
+                                </div>
+                                
+                                <div style={{marginBottom: '1.5rem'}}>
+                                    <h3>Is there a free trial?</h3>
+                                    <p>Yes, we offer a 7-day free trial for new users to explore our Premium plan features before committing to a subscription.</p>
+                                </div>
+                                
+                                <div style={{marginBottom: '1.5rem'}}>
+                                    <h3>How often is new content added?</h3>
+                                    <p>We add new scene breakdowns weekly, with additional behind-the-scenes content and interviews uploaded regularly.</p>
+                                </div>
+                                
+                                <div>
+                                    <h3>Can I switch between plans?</h3>
+                                    <p>Absolutely! You can upgrade or downgrade your subscription plan at any time. Changes will take effect on your next billing cycle.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Render the App component to the DOM
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>
